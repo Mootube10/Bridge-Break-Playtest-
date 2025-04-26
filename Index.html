@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Production Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #1f1f1f;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 30px;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input[type="file"], textarea, button, select {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+    }
+    button {
+      padding: 10px;
+      background: #ff4c4c;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e04343;
+    }
+    .file-list, .word-count {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ccc;
+    }
+    .track-container {
+      margin-top: 15px;
+      background: #2b2b2b;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .track-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+    }
+    .drag-handle {
+      cursor: move;
+      margin-right: 10px;
+    }
+    audio {
+      width: 200px;
+    }
+    .volume-control {
+      width: 100px;
+    }
+    .timeline {
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      height: 60px;
+      background: #1c1c1c;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .timeline-clip {
+      height: 40px;
+      width: 150px;
+      background: #ff4c4c;
+      border-radius: 5px;
+      margin-right: 10px;
+      cursor: grab;
+      text-align: center;
+      line-height: 40px;
+    }
+    .saved-projects ul {
+      list-style: none;
+      padding: 0;
+    }
+    .saved-projects li {
+      padding: 5px 0;
+      border-bottom: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Music Production Platform</h1>
+    <p>For Producers and Writers</p>
+  </header>  <div class="container">
+    <div class="section">
+      <h2>Beat Library</h2>
+      <button onclick="alert('Beat Library coming soon')">Browse Beats</button>
+    </div><div class="section">
+  <h2>Upload Audio Tracks</h2>
+  <input type="file" accept="audio/*" multiple id="audio-upload">
+  <div class="file-list" id="file-list"></div>
+</div>
+
+<div class="section">
+  <h2>Multi-track Editor</h2>
+  <div class="track-container" id="track-container">
+    <p>Drag and drop tracks to reorder them.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Timeline Editor (Mock)</h2>
+  <div class="timeline" id="timeline">
+    <!-- Clips added dynamically -->
+  </div>
+</div>
+
+<div class="section">
+  <h2>Lyrics / Notes</h2>
+  <textarea rows="6" placeholder="Write your lyrics or notes here..." id="lyrics"></textarea>
+  <div class="word-count" id="word-count">Word count: 0</div>
+</div>
+
+<div class="section">
+  <h2>Saved Projects</h2>
+  <div class="saved-projects" id="saved-projects">
+    <ul id="project-list"></ul>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Export</h2>
+  <button onclick="exportProject()">Export to MP3</button>
+</div>
+
+  </div>  <footer>
+    <p>&copy; 2025 MusicMaker Inc.</p>
+  </footer>  <script>
+    const fileInput = document.getElementById('audio-upload');
+    const fileList = document.getElementById('file-list');
+    const trackContainer = document.getElementById('track-container');
+    const lyricsBox = document.getElementById('lyrics');
+    const wordCount = document.getElementById('word-count');
+    const timeline = document.getElementById('timeline');
+    const projectList = document.getElementById('project-list');
+
+    let savedFiles = JSON.parse(localStorage.getItem('savedFiles')) || [];
+
+    // Load saved projects from local storage
+    function loadSavedProjects() {
+      projectList.innerHTML = savedFiles.map(name => `<li>${name}</li>`).join('');
+      timeline.innerHTML = savedFiles.map(name => `<div class="timeline-clip">${name}</div>`).join('');
+    }
+
+    loadSavedProjects();
+
+    fileInput.addEventListener('change', () => {
+      const files = Array.from(fileInput.files);
+      fileList.innerHTML = files.map(f => `<div>${f.name}</div>`).join('');
+
+      files.forEach(file => {
+        savedFiles.push(file.name);
+        updateSavedProjects();
+
+        const track = document.createElement('div');
+        track.className = 'track';
+        track.draggable = true;
+
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = URL.createObjectURL(file);
+
+        const volume = document.createElement('input');
+        volume.type = 'range';
+        volume.min = 0;
+        volume.max = 1;
+        volume.step = 0.01;
+        volume.value = 1;
+        volume.className = 'volume-control';
+        volume.oninput = () => {
+          audio.volume = volume.value;
+        };
+
+        const effect = document.createElement('select');
+        effect.innerHTML = `
+          <option value="none">No Effect</option>
+          <option value="reverb">Reverb (mock)</option>
+          <option value="delay">Delay (mock)</option>
+        `;
+        effect.onchange = () => {
+          alert('Audio effects are coming soon! This is a placeholder.');
+        };
+
+        const controls = document.createElement('div');
+        controls.className = 'track-controls';
+        controls.appendChild(audio);
+        controls.appendChild(volume);
+        controls.appendChild(effect);
+
+        track.innerHTML = `<span class="drag-handle">::</span><span>${file.name}</span>`;
+        track.appendChild(controls);
+
+        addDragAndDrop(track);
+        trackContainer.appendChild(track);
+
+        const clip = document.createElement('div');
+        clip.className = 'timeline-clip';
+        clip.textContent = file.name;
+        timeline.appendChild(clip);
+      });
+    });
+
+    function updateSavedProjects() {
+      localStorage.setItem('savedFiles', JSON.stringify(savedFiles));
+      loadSavedProjects();
+    }
+
+    function addDragAndDrop(track) {
+      track.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', '');
+        track.classList.add('dragging');
+      });
+      track.addEventListener('dragend', () => {
+        track.classList.remove('dragging');
+      });
+      track.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const dragging = document.querySelector('.dragging');
+        const siblings = [...trackContainer.children];
+        const index = siblings.indexOf(track);
+        const dragIndex = siblings.indexOf(dragging);
+        if (dragIndex < index) {
+          track.after(dragging);
+        } else {
+          track.before(dragging);
+        }
+      });
+    }
+
+    lyricsBox.addEventListener('input', () => {
+      const words = lyricsBox.value.trim().split(/\s+/).filter(w => w.length > 0);
+      wordCount.textContent = `Word count: ${words.length}`;
+    });
+
+    function exportProject() {
+      alert("Export feature will allow downloading MP3 soon. Stay tuned!");
+    }
+  </script></body>
+</html>
