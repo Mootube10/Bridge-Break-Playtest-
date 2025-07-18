@@ -1,268 +1,252 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Production Platform</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Music Company App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-      margin: 0;
-      padding: 0;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
-    header, footer {
-      background-color: #1f1f1f;
-      padding: 20px;
-      text-align: center;
-    }
-    .container {
-      padding: 20px;
-    }
-    .section {
-      margin-bottom: 30px;
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    input[type="file"], textarea, button, select {
-      display: block;
-      margin-top: 10px;
+    input, select, textarea, button {
       width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
     }
     button {
-      padding: 10px;
-      background: #ff4c4c;
-      border: none;
-      color: white;
-      border-radius: 5px;
       cursor: pointer;
+      margin-top: 1rem;
     }
-    button:hover {
-      background: #e04343;
-    }
-    .file-list, .word-count {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #ccc;
-    }
-    .track-container {
-      margin-top: 15px;
-      background: #2b2b2b;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    .track {
+    header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
-      background: #333;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    .track-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      align-items: flex-end;
-    }
-    .drag-handle {
-      cursor: move;
-      margin-right: 10px;
-    }
-    audio {
-      width: 200px;
-    }
-    .volume-control {
-      width: 100px;
-    }
-    .timeline {
-      display: flex;
       align-items: center;
-      overflow-x: auto;
-      height: 60px;
-      background: #1c1c1c;
-      padding: 10px;
-      border-radius: 5px;
     }
-    .timeline-clip {
-      height: 40px;
-      width: 150px;
-      background: #ff4c4c;
-      border-radius: 5px;
-      margin-right: 10px;
-      cursor: grab;
-      text-align: center;
-      line-height: 40px;
+    hr {
+      margin: 1.5rem 0;
     }
-    .saved-projects ul {
-      list-style: none;
-      padding: 0;
+    .hidden {
+      display: none;
     }
-    .saved-projects li {
-      padding: 5px 0;
-      border-bottom: 1px solid #333;
+    .analytics {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-top: 2rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Online Music Production Platform</h1>
-    <p>For Producers and Writers</p>
-  </header>  <div class="container">
-    <div class="section">
-      <h2>Beat Library</h2>
-      <button onclick="alert('Beat Library coming soon')">Browse Beats</button>
-    </div><div class="section">
-  <h2>Upload Audio Tracks</h2>
-  <input type="file" accept="audio/*" multiple id="audio-upload">
-  <div class="file-list" id="file-list"></div>
-</div>
 
-<div class="section">
-  <h2>Multi-track Editor</h2>
-  <div class="track-container" id="track-container">
-    <p>Drag and drop tracks to reorder them.</p>
+  <div id="login-section">
+    <h1>Login</h1>
+    <form id="login-form">
+      <label>
+        Email:
+        <input type="email" id="email" required />
+      </label>
+      <label>
+        Name:
+        <input type="text" id="name" required />
+      </label>
+      <label>
+        Job Title:
+        <select id="jobTitle" required>
+          <option value="Producer">Producer</option>
+          <option value="Artist">Artist</option>
+          <option value="Writer">Writer</option>
+        </select>
+      </label>
+      <button type="submit">Login</button>
+    </form>
   </div>
-</div>
 
-<div class="section">
-  <h2>Timeline Editor (Mock)</h2>
-  <div class="timeline" id="timeline">
-    <!-- Clips added dynamically -->
+  <div id="dashboard-section" class="hidden">
+    <header>
+      <h1 id="welcome-message"></h1>
+      <button id="logout-button">Logout</button>
+    </header>
+    <hr />
+    <div id="producer-dashboard" class="hidden">
+      <h2>Producer Dashboard</h2>
+      <p>You can upload music for your artists here.</p>
+      <input type="file" id="producer-music-upload" accept="audio/*" />
+      <button id="producer-upload-button">Upload Music for Artist</button>
+      <div class="analytics">
+        <h3>Analytics</h3>
+        <p>Views: 1234</p>
+        <p>Subscribers: 567</p>
+        <p>More analytics features to be implemented...</p>
+      </div>
+    </div>
+
+    <div id="artist-dashboard" class="hidden">
+      <h2>Artist Dashboard</h2>
+      <p>You can create vocals, write lyrics, and upload your music.</p>
+      <input type="file" id="artist-music-upload" accept="audio/*" />
+      <button id="artist-upload-button">Upload Your Music</button>
+      <div id="lyrics-editor">
+        <h3>Lyrics Editor</h3>
+        <textarea id="artist-lyrics" rows="8" placeholder="Write your lyrics here..."></textarea>
+        <button id="submit-lyrics-button">Submit Lyrics</button>
+      </div>
+      <div class="analytics">
+        <h3>Analytics</h3>
+        <p>Views: 1234</p>
+        <p>Subscribers: 567</p>
+        <p>More analytics features to be implemented...</p>
+      </div>
+    </div>
+
+    <div id="writer-dashboard" class="hidden">
+      <h2>Writer Dashboard</h2>
+      <p>Write lyrics and send them to singers.</p>
+      <div id="writer-lyrics-editor">
+        <h3>Lyrics Editor</h3>
+        <textarea id="writer-lyrics" rows="8" placeholder="Write your lyrics here..."></textarea>
+        <button id="writer-submit-lyrics-button">Submit Lyrics</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="section">
-  <h2>Lyrics / Notes</h2>
-  <textarea rows="6" placeholder="Write your lyrics or notes here..." id="lyrics"></textarea>
-  <div class="word-count" id="word-count">Word count: 0</div>
-</div>
+  <script>
+    // Elements
+    const loginSection = document.getElementById("login-section");
+    const dashboardSection = document.getElementById("dashboard-section");
+    const welcomeMessage = document.getElementById("welcome-message");
+    const logoutButton = document.getElementById("logout-button");
 
-<div class="section">
-  <h2>Saved Projects</h2>
-  <div class="saved-projects" id="saved-projects">
-    <ul id="project-list"></ul>
-  </div>
-</div>
+    const producerDashboard = document.getElementById("producer-dashboard");
+    const artistDashboard = document.getElementById("artist-dashboard");
+    const writerDashboard = document.getElementById("writer-dashboard");
 
-<div class="section">
-  <h2>Export</h2>
-  <button onclick="exportProject()">Export to MP3</button>
-</div>
+    // Form fields
+    const loginForm = document.getElementById("login-form");
+    const emailInput = document.getElementById("email");
+    const nameInput = document.getElementById("name");
+    const jobTitleSelect = document.getElementById("jobTitle");
 
-  </div>  <footer>
-    <p>&copy; 2025 MusicMaker Inc.</p>
-  </footer>  <script>
-    const fileInput = document.getElementById('audio-upload');
-    const fileList = document.getElementById('file-list');
-    const trackContainer = document.getElementById('track-container');
-    const lyricsBox = document.getElementById('lyrics');
-    const wordCount = document.getElementById('word-count');
-    const timeline = document.getElementById('timeline');
-    const projectList = document.getElementById('project-list');
+    // Music upload inputs and buttons
+    const producerMusicUpload = document.getElementById("producer-music-upload");
+    const producerUploadButton = document.getElementById("producer-upload-button");
 
-    let savedFiles = JSON.parse(localStorage.getItem('savedFiles')) || [];
+    const artistMusicUpload = document.getElementById("artist-music-upload");
+    const artistUploadButton = document.getElementById("artist-upload-button");
 
-    // Load saved projects from local storage
-    function loadSavedProjects() {
-      projectList.innerHTML = savedFiles.map(name => `<li>${name}</li>`).join('');
-      timeline.innerHTML = savedFiles.map(name => `<div class="timeline-clip">${name}</div>`).join('');
+    // Lyrics editors and buttons
+    const artistLyrics = document.getElementById("artist-lyrics");
+    const submitLyricsButton = document.getElementById("submit-lyrics-button");
+
+    const writerLyrics = document.getElementById("writer-lyrics");
+    const writerSubmitLyricsButton = document.getElementById("writer-submit-lyrics-button");
+
+    // Current user state
+    let currentUser = null;
+
+    function showDashboardForRole(role) {
+      // Hide all first
+      producerDashboard.classList.add("hidden");
+      artistDashboard.classList.add("hidden");
+      writerDashboard.classList.add("hidden");
+
+      switch(role) {
+        case "Producer":
+          producerDashboard.classList.remove("hidden");
+          break;
+        case "Artist":
+          artistDashboard.classList.remove("hidden");
+          break;
+        case "Writer":
+          writerDashboard.classList.remove("hidden");
+          break;
+      }
     }
 
-    loadSavedProjects();
+    loginForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const email = emailInput.value.trim();
+      const name = nameInput.value.trim();
+      const jobTitle = jobTitleSelect.value;
 
-    fileInput.addEventListener('change', () => {
-      const files = Array.from(fileInput.files);
-      fileList.innerHTML = files.map(f => `<div>${f.name}</div>`).join('');
+      if (!email || !name || !jobTitle) {
+        alert("Please fill in all fields.");
+        return;
+      }
 
-      files.forEach(file => {
-        savedFiles.push(file.name);
-        updateSavedProjects();
+      currentUser = { email, name, jobTitle };
+      welcomeMessage.textContent = `Welcome, ${name} (${jobTitle})`;
 
-        const track = document.createElement('div');
-        track.className = 'track';
-        track.draggable = true;
+      loginSection.classList.add("hidden");
+      dashboardSection.classList.remove("hidden");
 
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = URL.createObjectURL(file);
+      showDashboardForRole(jobTitle);
 
-        const volume = document.createElement('input');
-        volume.type = 'range';
-        volume.min = 0;
-        volume.max = 1;
-        volume.step = 0.01;
-        volume.value = 1;
-        volume.className = 'volume-control';
-        volume.oninput = () => {
-          audio.volume = volume.value;
-        };
-
-        const effect = document.createElement('select');
-        effect.innerHTML = `
-          <option value="none">No Effect</option>
-          <option value="reverb">Reverb (mock)</option>
-          <option value="delay">Delay (mock)</option>
-        `;
-        effect.onchange = () => {
-          alert('Audio effects are coming soon! This is a placeholder.');
-        };
-
-        const controls = document.createElement('div');
-        controls.className = 'track-controls';
-        controls.appendChild(audio);
-        controls.appendChild(volume);
-        controls.appendChild(effect);
-
-        track.innerHTML = `<span class="drag-handle">::</span><span>${file.name}</span>`;
-        track.appendChild(controls);
-
-        addDragAndDrop(track);
-        trackContainer.appendChild(track);
-
-        const clip = document.createElement('div');
-        clip.className = 'timeline-clip';
-        clip.textContent = file.name;
-        timeline.appendChild(clip);
-      });
+      // Clear inputs (optional)
+      emailInput.value = "";
+      nameInput.value = "";
     });
 
-    function updateSavedProjects() {
-      localStorage.setItem('savedFiles', JSON.stringify(savedFiles));
-      loadSavedProjects();
-    }
+    logoutButton.addEventListener("click", () => {
+      currentUser = null;
+      dashboardSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
 
-    function addDragAndDrop(track) {
-      track.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', '');
-        track.classList.add('dragging');
-      });
-      track.addEventListener('dragend', () => {
-        track.classList.remove('dragging');
-      });
-      track.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const dragging = document.querySelector('.dragging');
-        const siblings = [...trackContainer.children];
-        const index = siblings.indexOf(track);
-        const dragIndex = siblings.indexOf(dragging);
-        if (dragIndex < index) {
-          track.after(dragging);
-        } else {
-          track.before(dragging);
-        }
-      });
-    }
-
-    lyricsBox.addEventListener('input', () => {
-      const words = lyricsBox.value.trim().split(/\s+/).filter(w => w.length > 0);
-      wordCount.textContent = `Word count: ${words.length}`;
+      // Clear any inputs or textareas on logout
+      artistLyrics.value = "";
+      writerLyrics.value = "";
+      producerMusicUpload.value = "";
+      artistMusicUpload.value = "";
     });
 
-    function exportProject() {
-      alert("Export feature will allow downloading MP3 soon. Stay tuned!");
-    }
-  </script></body>
+    // Upload handlers (simulated)
+    producerUploadButton.addEventListener("click", () => {
+      const file = producerMusicUpload.files[0];
+      if (!file) {
+        alert("Please select a music file to upload.");
+        return;
+      }
+      alert(`Producer uploaded music: ${file.name}`);
+      producerMusicUpload.value = "";
+    });
+
+    artistUploadButton.addEventListener("click", () => {
+      const file = artistMusicUpload.files[0];
+      if (!file) {
+        alert("Please select a music file to upload.");
+        return;
+      }
+      alert(`Artist uploaded music: ${file.name}`);
+      artistMusicUpload.value = "";
+    });
+
+    // Lyrics submit handlers
+    submitLyricsButton.addEventListener("click", () => {
+      const text = artistLyrics.value.trim();
+      if (!text) {
+        alert("Please write some lyrics before submitting.");
+        return;
+      }
+      alert(`Artist submitted lyrics:\n${text}`);
+      artistLyrics.value = "";
+    });
+
+    writerSubmitLyricsButton.addEventListener("click", () => {
+      const text = writerLyrics.value.trim();
+      if (!text) {
+        alert("Please write some lyrics before submitting.");
+        return;
+      }
+      alert(`Writer submitted lyrics:\n${text}`);
+      writerLyrics.value = "";
+    });
+
+  </script>
+</body>
 </html>
+
